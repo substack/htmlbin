@@ -1,6 +1,6 @@
 {
   "name": "htmlbin",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "host immutable html blobs on a content-addressed subdomain",
   "bin": {
     "htmlbin": "bin/cmd.js"
