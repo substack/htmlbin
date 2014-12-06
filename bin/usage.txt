@@ -1,0 +1,27 @@
+htmlbin {OPTIONS}
+htmlbin upload {OPTIONS}
+
+  -i --infile   Read from FILE or - for stdin (default: -)
+
+htmlbin server {OPTIONS}
+
+  -p --port     Listen for HTTP requests on this port (default: 80/8000).
+  -s --sslport  Listen for HTTPS requests (default: 443/8443).
+  -u --uid      Run the server as USER.
+  -g --gid      Run the server with group set to GID.
+  -d --datadir  Where to put files
+ 
+  SSL options:
+
+  --key=KEYFILE    Load the private key from KEYFILE.
+  --cert=CERTFILE  Load the certificate from CERTFILE.
+  --pfx=PFXFILE    Load the combination keys and certificates from PFXFILE.
+
+htmlbin config { get KEY | set KEY VALUE | rm KEY | list }
+
+  * remote - where to push html payloads. default: https://htmlb.in
+
+htmlbin help
+
+  Show this message.
+
