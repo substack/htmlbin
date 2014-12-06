@@ -48,8 +48,9 @@ else if (argv._[0] === 'server') {
     if (fd.https) {
         if (fd.http && argv.port === 0) {
             http.createServer(function (req, res) {
+                var u = 'https://' + res.headers.host + req.url;
                 res.statusCode = 301;
-                res.setHeader('location', 'https://' + res.headers.host);
+                res.setHeader('location', u);
                 res.end();
             }).listen(argv.port);
         }
