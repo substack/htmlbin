@@ -28,7 +28,10 @@ function HTMLBin (db, store) {
 HTMLBin.prototype.exec = function (req, res) {
     var hparts = (req.headers.host || '').split('.');
     var hash = hparts[0];
-    function link (h) { return 'http://' + h + '.' + hparts.join('.') }
+    var proto = req.socket.encrypted ? 'https:' + 'http:';
+    function link (h) {
+        return proto + '//' + h + '.' + hparts.join('.')
+    }
     
     if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET'
     && req.url === '/cache.manifest') {
