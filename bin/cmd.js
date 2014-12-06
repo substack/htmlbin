@@ -6,10 +6,10 @@ var through = require('through2');
 var lexi = require('lexicographic-integer');
 var fs = require('fs');
 var path = require('path');
-var strftime = require('strftime');
+var url = require('url');
+var defined = require('defined');
 
 var hyperstream = require('hyperstream');
-var hyperspace = require('hyperspace');
 
 var minimist = require('minimist');
 var argv = minimist(process.argv.slice(2), {
@@ -23,19 +23,8 @@ var db = level('./db', { valueEncoding: 'json' });
 var blob = require('content-addressable-blob-store');
 var store = blob(argv);
 
-var render = {};
-var html = fs.readFileSync(__dirname + '/../static/recent.html', 'utf8');
-render.recent = function (addr) {
-    return hyperspace(html, function (row) {
-        var parts = row.key.split('!');
-        return {
-            '.hash': {
-                href: 'http://' + parts[2] + '.' + addr,
-                _text: parts[2]
-            },
-            '.time': strftime('%F %T', new Date(lexi.unpack(parts[1])))
-        };
-    });
+var render = {
+    recent: require('../render/recent.js')
 };
 
 var ecstatic = require('ecstatic');
@@ -61,13 +50,37 @@ var server = http.createServer(function (req, res) {
         res.setHeader('content-type', 'text/html');
         read('index.html').pipe(hyperstream({
             '#recent': db.createReadStream({
-                limit: 5,
+                limit: 20,
                 gt: 'recent!',
                 lt: 'recent!~',
                 reverse: true
-            }).pipe(render.recent(hparts.slice(1).join('.'))),
+            }).pipe(render.recent(req.headers.host || '')),
             '#cmd': { _text: read('cmd.txt') }
         })).pipe(res);
+    }
+    else if (req.url === '/recent') {
+        var params = url.parse(req.url);
+        var opts = {
+            limit: defined(params.limit, 100),
+            gt: 'recent!' + defined(params.gt, ''),
+            lt: 'recent!~',
+            reverse: true
+        };
+        var last = null;
+        var write = function (row, enc, next) {
+            last = row.key.split('!')[1] + '!~';
+            this.push(row.key.split('!')[2] + '\n');
+            next();
+        };
+        var end = function () {
+            if (last) {
+                res.addTrailers({
+                    'link': '</recent?gt=' + last + '>; rel="next"'
+                });
+            }
+            this.push(null);
+        };
+        db.createReadStream(opts).pipe(through.obj(write, end)).pipe(res);
     }
     else est(req, res);
 });
