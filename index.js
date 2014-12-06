@@ -64,7 +64,7 @@ HTMLBin.prototype.exec = function (req, res) {
                 gt: 'recent!',
                 lt: 'recent!~',
                 reverse: true
-            }).pipe(render.recent(req.headers.host || '')),
+            }).pipe(render.recent(proto, req.headers.host || '')),
             '#cmd': { _text: read('cmd.txt') }
         })).pipe(res);
     }
