@@ -28,7 +28,7 @@ function HTMLBin (db, store) {
 HTMLBin.prototype.exec = function (req, res) {
     var hparts = (req.headers.host || '').split('.');
     var hash = hparts[0];
-    var proto = req.socket.encrypted ? 'https:' + 'http:';
+    var proto = req.socket.encrypted ? 'https:' : 'http:';
     function link (h) {
         return proto + '//' + h + '.' + hparts.join('.')
     }
