@@ -48,13 +48,17 @@ HTMLBin.prototype.exec = function (req, res) {
         this._loadFile(hash, res);
     }
     else if (req.method === 'POST' || req.method === 'PUT') {
-        req.pipe(this._saveFile(req, function (err, hash) {
+        var save = this._saveFile(req, function (err, hash) {
             if (err) {
                 res.statusCode = 500;
                 res.end(err + '\n');
             }
             else res.end(link(hash) + '\n')
-        }));
+        });
+        if (req.url.split('?')[0] !== '/raw') {
+            save.write('<html manifest="cache.manifest">\n');
+        }
+        req.pipe(save);
     }
     else if (req.url === '/') {
         res.setHeader('content-type', 'text/html; charset=UTF-8');
