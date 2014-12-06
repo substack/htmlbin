@@ -6,6 +6,7 @@ var argv = minimist(process.argv.slice(2), {
         p: 'port', s: 'sslport',
         u: 'uid', g: 'gid',
         d: 'datadir', r: 'remote',
+        'redir': [ 'sslredirect', 'redirect' ],
         h: 'help'
     },
     default: {
@@ -46,7 +47,7 @@ else if (argv._[0] === 'server') {
     var handle = require('../')(db, store);
     
     if (fd.https) {
-        if (fd.http && argv.port === 0) {
+        if (fd.http && argv.sslredirect) {
             http.createServer(function (req, res) {
                 var u = 'https://' + res.headers.host + req.url;
                 res.statusCode = 301;
@@ -83,7 +84,8 @@ else if (argv._[0] === 'upload' || argv._[0] === undefined) {
     var config = getConfig();
     var remote = defined(argv.remote, config.remote);
     var u = url.parse(remote);
-    var r = input.pipe(http.request({
+    var proto = u.protocol === 'https:' ? https : http;
+    var r = input.pipe(proto.request({
         method: 'PUT',
         host: u.hostname,
         port: u.port,
