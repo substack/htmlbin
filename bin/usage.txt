@@ -2,6 +2,7 @@ htmlbin {OPTIONS}
 htmlbin upload {OPTIONS}
 
   -i --infile   Read from FILE or - for stdin (default: -)
+  -r --remote   Use REMOTE as the remote endpoint. Overides config.
 
 htmlbin server {OPTIONS}
 

@@ -37,6 +37,7 @@ if (argv._[0] === 'help' || argv.help) {
     r.pipe(process.stdout);
 }
 else if (argv._[0] === 'server') {
+    mkdirp.sync(argv.datadir);
     var level = require('level');
     var db = level(path.join(argv.datadir, 'db'), { valueEncoding: 'json' });
     
@@ -80,9 +81,13 @@ else if (argv._[0] === 'upload' || argv._[0] === undefined) {
     ;
     var config = getConfig();
     var remote = defined(argv.remote, config.remote);
-    var opts = url.parse(remote);
-    opts.method = 'PUT';
-    var r = input.pipe(http.request(opts));
+    var u = url.parse(remote);
+    var r = input.pipe(http.request({
+        method: 'PUT',
+        host: u.hostname,
+        port: u.port,
+        path: u.path
+    }));
     r.on('response', function (res) {
         if (!/^2/.test(res.statusCode)) {
             console.error('error code ' + res.statusCode);
