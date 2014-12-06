@@ -23,6 +23,7 @@ function HTMLBin (db, store) {
     if (!(this instanceof HTMLBin)) return new HTMLBin(db, store);
     this.db = db;
     this.store = store;
+    this.age = Math.floor(60*60*24*365.25*100);
 }
 
 HTMLBin.prototype.exec = function (req, res) {
@@ -30,7 +31,18 @@ HTMLBin.prototype.exec = function (req, res) {
     var hash = hparts.slice(0,2).join('');
     function link (h) { return 'http://' + h + '.' + hparts.join('.') }
     
-    if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET') {
+    if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET'
+    && req.url === '/cache.manifest') {
+        res.setHeader('cache-control', 'max-age=' + this.age);
+        res.setHeader('content-type', 'text/cache-manifest; charset=UTF-8');
+        res.end('CACHE MANIFEST\n'
+            + '/\n'
+            + '/cache.manifest\n'
+            + 'NETWORK:\n'
+            + '*\n'
+        );
+    }
+    else if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET') {
         this._loadFile(hash, res);
     }
     else if (req.method === 'POST' || req.method === 'PUT') {
@@ -43,7 +55,7 @@ HTMLBin.prototype.exec = function (req, res) {
         }));
     }
     else if (req.url === '/') {
-        res.setHeader('content-type', 'text/html');
+        res.setHeader('content-type', 'text/html; charset=UTF-8');
         read('index.html').pipe(hyperstream({
             '#recent': this.db.createReadStream({
                 limit: 20,
@@ -83,8 +95,8 @@ HTMLBin.prototype.exec = function (req, res) {
 
 HTMLBin.prototype._loadFile = function (hash, res) {
     var r = this.store.createReadStream({ key: hash });
-    res.setHeader('max-age', Math.floor(60*60*24*365.25*100));
-    res.setHeader('content-type', 'text/html');
+    res.setHeader('cache-control', 'max-age=' + this.age);
+    res.setHeader('content-type', 'text/html; charset=UTF-8');
     res.setHeader('access-control-allow-origin', '*');
     
     r.on('error', function (err) {
