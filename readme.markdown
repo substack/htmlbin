@@ -13,7 +13,7 @@ You can use the free service on https://htmlb.in:
 
 ```
 $ echo '<b>wow</b>' | htmlbin
-https://567999e2a16bc72f5d86d2040d723bbb.f020cf80ced3aa8457e6e69bc306f8e5.htmlb.in
+http://fbf232d01fe2b8ec47602bb2236438e8fb0c0ea9.localhost:8000
 ```
 
 # server example
@@ -24,7 +24,7 @@ or you can run a server yourself:
 $ htmlbin server -p 8000 &
 $ htmlbin config set remote http://localhost:8000
 $ echo '<i>pizza</i>' | htmlbin
-http://385937a7b1101366aced05ba2ac084e2c.bbe6c7920024782f7a3562506dbb7f1.localhost:8000
+http://361bcaa39df203b4bf5d8da97202b9904985b981.localhost:8000
 ```
 
 # curl example
@@ -33,7 +33,7 @@ or you can just use curl:
 
 ```
 $ echo '<i>pizza</i>' | curl -sT- http://localhost:8000
-http://385937a7b1101366aced05ba2ac084e2c.bbe6c7920024782f7a3562506dbb7f1.localhost:8000
+http://361bcaa39df203b4bf5d8da97202b9904985b981.localhost:8000
 ```
 
 # usage
