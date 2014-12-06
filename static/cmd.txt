@@ -1,0 +1,2 @@
+echo '<marquee><blink>wow</blink></marquee>' \
+  | curl -sSNT- https://htmlb.in
