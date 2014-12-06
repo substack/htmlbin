@@ -29,7 +29,7 @@ var server = http.createServer(function (req, res) {
         loadFile(host, res);
     }
     else if (req.method === 'POST' || req.method === 'PUT') {
-        req.pipe(saveFile(function (err, hash) {
+        req.pipe(saveFile(req, function (err, hash) {
             if (err) {
                 res.statusCode = 500;
                 res.end(err + '\n');
@@ -69,7 +69,7 @@ function loadFile (hash, res) {
     r.pipe(res);
 }
 
-function saveFile (cb) {
+function saveFile (req, cb) {
     var bytes = 0;
     var tr = through(function (buf, enc, next) {
         bytes += buf.length;
@@ -85,7 +85,7 @@ function saveFile (cb) {
     var w = store.createWriteStream();
     w.on('error', cb);
     w.on('finish', function () {
-        db.batch([
+        var rows = [
             {
                 type: 'put',
                 key: 'recent!' + lexi.pack(Date.now()) + '!' + w.key,
@@ -99,8 +99,8 @@ function saveFile (cb) {
                 key: 'blob!' + w.key,
                 value: { size: bytes }
             }
-        ]);
-        db.put(key, doc, function (err) {
+        ];
+        db.batch(rows, function (err) {
             if (err) cb(err)
             else cb(null, w.key)
         });
