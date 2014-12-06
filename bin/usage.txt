@@ -11,6 +11,8 @@ htmlbin server {OPTIONS}
   -u --uid      Run the server as USER.
   -g --gid      Run the server with group set to GID.
   -d --datadir  Where to put files
+
+  --allow-post  Whether POST requests are allowed for uploads. Default: true.
  
   SSL options:
 

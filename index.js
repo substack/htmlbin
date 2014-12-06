@@ -13,16 +13,18 @@ var render = {
     recent: require('./render/recent.js')
 };
 
-module.exports = function (db, store) {
-    var b = new HTMLBin(db, store);
+module.exports = function (db, store, opts) {
+    var b = new HTMLBin(db, store, opts);
     return function (req, res) { b.exec(req, res) };
 };
 
-function HTMLBin (db, store) {
-    if (!(this instanceof HTMLBin)) return new HTMLBin(db, store);
+function HTMLBin (db, store, opts) {
+    if (!(this instanceof HTMLBin)) return new HTMLBin(db, store, opts);
     this.db = db;
     this.store = store;
     this.age = Math.floor(60*60*24*365.25*100);
+    this.options = opts || {};
+    this.options.allowPost = defined(this.options.allowPost, true);
 }
 
 HTMLBin.prototype.exec = function (req, res) {
@@ -47,7 +49,8 @@ HTMLBin.prototype.exec = function (req, res) {
     else if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET') {
         this._loadFile(hash, res);
     }
-    else if (req.method === 'POST' || req.method === 'PUT') {
+    else if ((this.options.allowPost && req.method === 'POST')
+    || req.method === 'PUT') {
         var save = this._saveFile(req, function (err, hash) {
             if (err) {
                 res.statusCode = 500;

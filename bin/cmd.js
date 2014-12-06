@@ -6,8 +6,8 @@ var argv = minimist(process.argv.slice(2), {
         p: 'port', s: 'sslport',
         u: 'uid', g: 'gid',
         d: 'datadir', r: 'remote',
-        'redir': [ 'sslredirect', 'redirect' ],
-        h: 'help'
+        redir: [ 'sslredirect', 'redirect' ],
+        allowPost: 'allow-post', h: 'help'
     },
     default: {
         port: process.getuid() ? 8000 : 80,
@@ -47,7 +47,7 @@ else if (argv._[0] === 'server') {
         path: path.join(argv.datadir, 'blob'),
         algo: 'sha1'
     });
-    var handle = require('../')(db, store);
+    var handle = require('../')(db, store, argv);
     
     if (fd.https) {
         if (fd.http && argv.sslredirect) {
