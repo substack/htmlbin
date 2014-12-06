@@ -43,7 +43,10 @@ else if (argv._[0] === 'server') {
     var db = level(path.join(argv.datadir, 'db'), { valueEncoding: 'json' });
     
     var blob = require('content-addressable-blob-store');
-    var store = blob({ path: path.join(argv.datadir, 'blob') });
+    var store = blob({
+        path: path.join(argv.datadir, 'blob'),
+        algo: 'sha1'
+    });
     var handle = require('../')(db, store);
     
     if (fd.https) {

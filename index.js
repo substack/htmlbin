@@ -12,7 +12,6 @@ var est = ecstatic(path.join(__dirname, 'static'));
 var render = {
     recent: require('./render/recent.js')
 };
-var split = require('./lib/split.js');
 
 module.exports = function (db, store) {
     var b = new HTMLBin(db, store);
@@ -51,7 +50,7 @@ HTMLBin.prototype.exec = function (req, res) {
                 res.statusCode = 500;
                 res.end(err + '\n');
             }
-            else res.end(link(split(hash)) + '\n')
+            else res.end(link(hash) + '\n')
         }));
     }
     else if (req.url === '/') {
