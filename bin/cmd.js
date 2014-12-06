@@ -33,6 +33,7 @@ var est = ecstatic(__dirname + '/static');
 var server = http.createServer(function (req, res) {
     var hparts = (req.headers.host || '').split('.');
     var hash = hparts[0];
+    function link (h) { return 'http://' + h + '.' + hparts.join('.') }
     
     if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET') {
         loadFile(hash, res);
@@ -43,7 +44,7 @@ var server = http.createServer(function (req, res) {
                 res.statusCode = 500;
                 res.end(err + '\n');
             }
-            else res.end(hash + '\n')
+            else res.end(link(hash) + '\n')
         }));
     }
     else if (req.url === '/') {

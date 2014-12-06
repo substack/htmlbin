@@ -2,17 +2,48 @@
 <html>
   <head>
     <style>
-      body: {
-        font-family: ms-comic-sans;
+      body {
+        font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      }
+      h1 {
+        font-size: 80px;
+        margin-bottom: 0.3em;
+        margin-top: 0.3em;
+      }
+      .rainbow1 {
+        background-image: -webkit-gradient(linear, left top, right top,
+          color-stop(0, #f22), color-stop(0.25, #f2f), color-stop(0.5, #22f),
+          color-stop(0.75, #2ff), color-stop(1, #2f2)
+        );
+        background-image: gradient(linear, left top, right top,
+          color-stop(0, #f22), color-stop(0.25, #f2f), color-stop(0.5, #22f),
+          color-stop(0.75, #2ff), color-stop(1, #2f2)
+        );
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+      .rainbow2 {
+        background-image: -webkit-gradient( linear, left top, right top,
+          color-stop(0, #2cc), color-stop(0.25, #2c2), color-stop(0.5, #2c2),
+          color-stop(0.75, #cc2), color-stop(1, #c22)
+        );
+        background-image: gradient( linear, left top, right top,
+          color-stop(0, #2ff), color-stop(0.25, #2f2), color-stop(0.5, #2f2),
+          color-stop(0.75, #ff2), color-stop(1, #f22)
+        );
+        color:transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
       }
     </style>
   </head>
   <body>
-    <h1>htmlbin</h1>
+    <h1><span class="rainbow1">htmlbin</span></h1>
     
     <pre id="cmd"></pre>
     
-    <h2>recent uploads</h2>
+    <h2><span class="rainbow2">recent uploads</span></h2>
     
     <div id="recent"></div>
   </body>
