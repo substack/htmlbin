@@ -49,7 +49,7 @@ else if (argv._[0] === 'server') {
     if (fd.https) {
         if (fd.http && argv.sslredirect) {
             http.createServer(function (req, res) {
-                var u = 'https://' + res.headers.host + req.url;
+                var u = 'https://' + req.headers.host + req.url;
                 res.statusCode = 301;
                 res.setHeader('location', u);
                 res.end();
