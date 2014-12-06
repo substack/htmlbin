@@ -53,7 +53,7 @@ else if (argv._[0] === 'server') {
                 res.statusCode = 301;
                 res.setHeader('location', u);
                 res.end();
-            }).listen(argv.port);
+            }).listen({ fd: fd.http });
         }
         else if (fd.http) {
             http.createServer(handle).listen({ fd: fd.http })
