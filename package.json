@@ -1,0 +1,46 @@
+{
+  "name": "htmlbin",
+  "version": "1.0.0",
+  "description": "host immutable html blobs on a content-addressed subdomain",
+  "main": "index.js",
+  "dependencies": {
+    "content-addressable-blob-store": "~4.1.1",
+    "defined": "~0.0.0",
+    "duplexer2": "~0.0.2",
+    "ecstatic": "~0.5.7",
+    "hyperspace": "~2.1.4",
+    "hyperstream": "~1.2.2",
+    "level": "~0.18.0",
+    "lexicographic-integer": "~1.1.0",
+    "minimist": "~1.1.0",
+    "mkdirp": "~0.5.0",
+    "strftime": "~0.8.2",
+    "tcp-bind": "~1.1.1",
+    "through2": "~0.6.3"
+  },
+  "devDependencies": {
+    "tape": "^3.0.0"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/htmlbin.git"
+  },
+  "homepage": "https://github.com/substack/htmlbin",
+  "keywords": [
+    "html",
+    "storage",
+    "service",
+    "blob",
+    "hash",
+    "content-addressable"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT"
+}
