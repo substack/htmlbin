@@ -36,6 +36,9 @@
         -webkit-background-clip: text;
         background-clip: text;
       }
+      p {
+        max-width: 600px;
+      }
     </style>
   </head>
   <body>
@@ -46,5 +49,23 @@
     <h2><span class="rainbow2">recent uploads</span></h2>
     
     <div id="recent"></div>
+    
+    <h2><span class="rainbow1">more</span></h2>
+    
+    <p>
+      htmlbin automatically puts a cache manifest in your html upload so that
+      your page will work forever offline!
+    </p>
+      
+    <p>
+      You can turn this off by piping to `curl -sT- https://htmlb.in/raw`.
+    </p>
+    
+    <h2><span class="rainbow2">cool links</span></h2>
+    
+    <ul>
+      <li><a href="https://github.com/substack/htmlbin">source code on github</a></li>
+      <li><a href="https://npmjs.org/package/htmlbin">npm install -g htmlbin</a></li>
+    </ul>
   </body>
 </html>
