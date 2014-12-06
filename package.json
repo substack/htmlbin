@@ -2,6 +2,9 @@
   "name": "htmlbin",
   "version": "1.0.0",
   "description": "host immutable html blobs on a content-addressed subdomain",
+  "bin": {
+    "htmlbin": "bin/cmd.js"
+  },
   "main": "index.js",
   "dependencies": {
     "content-addressable-blob-store": "~4.1.1",
