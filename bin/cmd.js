@@ -3,10 +3,13 @@
 var http = require('http');
 var https = require('https');
 var through = require('through2');
-var hyperstream = require('hyperstream');
 var lexi = require('lexicographic-integer');
 var fs = require('fs');
 var path = require('path');
+var strftime = require('strftime');
+
+var hyperstream = require('hyperstream');
+var hyperspace = require('hyperspace');
 
 var minimist = require('minimist');
 var argv = minimist(process.argv.slice(2), {
@@ -20,13 +23,30 @@ var db = level('./db', { valueEncoding: 'json' });
 var blob = require('content-addressable-blob-store');
 var store = blob(argv);
 
+var render = {};
+var html = fs.readFileSync(__dirname + '/../static/recent.html', 'utf8');
+render.recent = function (addr) {
+    return hyperspace(html, function (row) {
+        var parts = row.key.split('!');
+        return {
+            '.hash': {
+                href: 'http://' + parts[2] + '.' + addr,
+                _text: parts[2]
+            },
+            '.time': strftime('%F %T', new Date(lexi.unpack(parts[1])))
+        };
+    });
+};
+
 var ecstatic = require('ecstatic');
 var est = ecstatic(__dirname + '/static');
 
 var server = http.createServer(function (req, res) {
-    var host = (req.headers.host || '').split('.')[0];
-    if (/^[A-Fa-f0-9]{8,}$/.test(host) && req.method === 'GET') {
-        loadFile(host, res);
+    var hparts = (req.headers.host || '').split('.');
+    var hash = hparts[0];
+    
+    if (/^[A-Fa-f0-9]{8,}$/.test(hash) && req.method === 'GET') {
+        loadFile(hash, res);
     }
     else if (req.method === 'POST' || req.method === 'PUT') {
         req.pipe(saveFile(req, function (err, hash) {
@@ -40,7 +60,13 @@ var server = http.createServer(function (req, res) {
     else if (req.url === '/') {
         res.setHeader('content-type', 'text/html');
         read('index.html').pipe(hyperstream({
-            '#cmd': read('cmd.txt')
+            '#recent': db.createReadStream({
+                limit: 5,
+                gt: 'recent!',
+                lt: 'recent!~',
+                reverse: true
+            }).pipe(render.recent(hparts.slice(1).join('.'))),
+            '#cmd': { _text: read('cmd.txt') }
         })).pipe(res);
     }
     else est(req, res);
@@ -85,10 +111,14 @@ function saveFile (req, cb) {
     var w = store.createWriteStream();
     w.on('error', cb);
     w.on('finish', function () {
+        var key = 'recent!'
+            + Buffer(lexi.pack(Date.now())).toString('hex')
+            + '!' + w.key
+        ;
         var rows = [
             {
                 type: 'put',
-                key: 'recent!' + lexi.pack(Date.now()) + '!' + w.key,
+                key: key,
                 value: {
                     addr: req.remoteAddress,
                     xaddr: req.headers['x-forwarded-for']
