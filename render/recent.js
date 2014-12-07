@@ -15,7 +15,9 @@ module.exports = function (proto, addr) {
                     href: proto + '//' + parts[2] + '.' + addr,
                     _text: parts[2]
                 },
-                '.time': strftime('%F %T', new Date(lexi.unpack(parts[1])))
+                '.time': strftime('%F %T', new Date(lexi.unpack(parts[1]))),
+                '.addr': row.value.addr
+                    + (row.value.xaddr ? ' > ' + row.value.xaddr : '')
             };
         })).pipe(output);
     });

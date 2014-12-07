@@ -150,7 +150,7 @@ HTMLBin.prototype._saveFile = function (req, cb) {
                 type: 'put',
                 key: key,
                 value: {
-                    addr: req.remoteAddress,
+                    addr: req.socket.remoteAddress,
                     xaddr: req.headers['x-forwarded-for']
                 }
             },
