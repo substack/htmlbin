@@ -18,7 +18,7 @@
     "minimist": "~1.1.0",
     "mkdirp": "~0.5.0",
     "strftime": "~0.8.2",
-    "tcp-bind": "~1.1.1",
+    "tcp-bind": "^1.2.0",
     "through2": "~0.6.3"
   },
   "devDependencies": {
