@@ -51,7 +51,7 @@ HTMLBin.prototype.exec = function (req, res) {
     }
     else if ((this.options.allowPost && req.method === 'POST')
     || req.method === 'PUT') {
-        var save = this._saveFile(req, function (err, hash) {
+        var save = this._saveFile(req, res, function (err, hash) {
             if (err) {
                 res.statusCode = 500;
                 res.end(err + '\n');
@@ -124,7 +124,7 @@ HTMLBin.prototype._loadFile = function (hash, res) {
     r.pipe(res);
 };
 
-HTMLBin.prototype._saveFile = function (req, cb) {
+HTMLBin.prototype._saveFile = function (req, res, cb) {
     var self = this;
     var bytes = 0;
     var tr = through(function (buf, enc, next) {
