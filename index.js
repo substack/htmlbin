@@ -7,7 +7,10 @@ var hyperstream = require('hyperstream');
 var through = require('through2');
 
 var ecstatic = require('ecstatic');
-var est = ecstatic(path.join(__dirname, 'static'));
+var est = ecstatic({
+  root: path.join(__dirname, 'static'),
+  cors: true
+});
 
 var render = {
     recent: require('./render/recent.js')
@@ -28,6 +31,10 @@ function HTMLBin (db, store, opts) {
 }
 
 HTMLBin.prototype.exec = function (req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Authorization, '
+      + 'Content-Type, If-Match, If-Modified-Since, If-None-Match, '
+      + 'If-Unmodified-Since');
     var hparts = (req.headers.host || '').split('.');
     var hash = hparts[0];
     var proto = req.socket.encrypted ? 'https:' : 'http:';
